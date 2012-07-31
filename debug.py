@@ -50,7 +50,7 @@ for r,d,f in os.walk(music_dir):
 
             song = os.path.join(r, files)
 
-            print "Reading file: " + song
+            print "Reading file: " + song.decode(SYS_ENCODING)
             try:
                 f = MediaFile(song)
 
