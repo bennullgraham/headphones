@@ -28,7 +28,6 @@ import headphones
 
 from headphones import logger
 
-db_lock = threading.Lock()
 
 def dbFilename(filename="headphones.db"):
 
@@ -37,14 +36,15 @@ def dbFilename(filename="headphones.db"):
 class DBConnection:
 
     def __init__(self, filename="headphones.db"):
-    
+
+        self.db_lock = threading.Lock()
         self.filename = filename
         self.connection = sqlite3.connect(dbFilename(filename), timeout=20)
         self.connection.row_factory = sqlite3.Row
         
     def commit(self):
         
-        with db_lock:
+        with self.db_lock:
             
             attempt = 0
             
@@ -67,7 +67,7 @@ class DBConnection:
     
     def action(self, query, args=None, commit=True):
     
-        with db_lock:
+        with self.db_lock:
 
             if query == None:
                 return
